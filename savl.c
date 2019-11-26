@@ -119,6 +119,56 @@ struct node* insert(struct node *t,int ele)
     }
 }
 
+struct node* deletion(struct node *t,int ele)
+{
+    if(t==NULL)
+    {
+        printf("Not found\n");
+        return NULL;
+    }
+    if(ele>t->data)
+    {
+        t->rc=deletion(t->rc,ele);
+        if(balfact(t)==2)
+        {
+            if(balfact(t->lc)>=0)
+                t=llrotation(t);
+            else
+                t=lrrotation(t);
+        }
+    }
+    else if(ele<t->data)
+    {
+        t->lc=deletion(t->lc,ele);
+        if(balfact(t)==-2)
+        {
+            if(balfact(t->lc)<=0)
+                t=rrrotation(t);
+            else
+                t=rlrotation(t);
+        }
+    }
+
+    if(t->rc!=NULL)
+    {
+        struct node *temp=t->rc;
+        while(temp->lc=NULL)
+            temp=temp->lc;
+        t->data=temp->data;
+        t->rc=deletion(t->rc,temp->data);
+        if(balfact(t)==2)
+        {
+            if(balfact(t->lc)>=0)
+                t=llrotation(t);
+            else
+                t=lrrotation(t);
+        }
+        else
+            return (t->lc);
+        t->ht=height(t->lc);
+        return t;
+    }
+}
 
 
 void preorder(struct node *t)
@@ -134,13 +184,28 @@ void preorder(struct node *t)
 }
 
 int main()
-{   int num,ele,i;
+{   int num,ele,i,del,count=0;
+    struct node *b,*c;
     printf("Enter the number of elements you want to insert\n");
     scanf("%d",&num);
     for(i=1;i<=num;i++)
     {   printf("Enter the number %d \n ",i);
         scanf("%d",&ele);
-        root=insert(root,ele);
+        count++;
+        if(count==1)
+        {
+            root=insert(root,ele);
+            b=root;
+            printf("%d",b->data);
+        }
+        else
+            root=insert(root,ele);
     }
     preorder(root);
+    printf("Enter the number you want to delete\n");
+    scanf("%d",&del);
+    c=b;
+    root=deletion(root,del);
+    preorder(root);
+    return 0;
 }

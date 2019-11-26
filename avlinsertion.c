@@ -121,6 +121,8 @@ void preOrder(struct Node *root)
 }
 
 
+
+
 int main()
 {   int num,d;
 struct Node *root = NULL;
